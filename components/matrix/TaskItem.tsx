@@ -28,7 +28,7 @@ export function TaskItem({ task }: { task: Task }) {
         value={task.quadrant}
         onChange={(e) => actions.moveTask(task.id, e.target.value as Task["quadrant"])}
         aria-label={`Mover tarefa "${task.text}" para outro quadrante`}
-        className="shrink-0 cursor-pointer rounded-md border border-border bg-bg px-1.5 py-1 text-xs text-muted hover:text-text"
+        className="w-16 shrink-0 cursor-pointer rounded-md sm:w-auto border border-border bg-bg px-1.5 py-1 text-xs text-muted hover:text-text"
       >
         {QUADRANTS.map((q) => (
           <option key={q} value={q}>
