@@ -5,11 +5,12 @@ import { useSyncExternalStore } from "react";
 const noop = () => () => {};
 
 function formatToday() {
-  return new Intl.DateTimeFormat("pt-BR", {
+  const text = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long",
     day: "numeric",
     month: "long",
   }).format(new Date());
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 export function Header() {
@@ -26,7 +27,7 @@ export function Header() {
           SO Pessoal
         </h1>
       </div>
-      <p className="text-sm capitalize text-muted" suppressHydrationWarning>
+      <p className="text-sm text-muted" suppressHydrationWarning>
         {today}
       </p>
     </header>
