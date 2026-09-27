@@ -2,7 +2,14 @@
 
 import { useSyncExternalStore } from "react";
 import { dayKey } from "./date";
-import { DEFAULT_STATE, loadState, saveState, STORAGE_KEY } from "./storage";
+import {
+  BREAK_MS,
+  DEFAULT_STATE,
+  FOCUS_MS,
+  loadState,
+  saveState,
+  STORAGE_KEY,
+} from "./storage";
 import type { AppState, Quadrant, Task, TimerState, WeekDay } from "./types";
 
 /*
@@ -135,18 +142,33 @@ export const actions = {
     update((s) => ({ ...s, timer }));
   },
 
-  /** Registra um pomodoro de foco concluído e já prepara o timer seguinte. */
-  completeFocus(next: TimerState) {
-    const today = dayKey();
-    update((s) => ({
-      ...s,
-      timer: next,
-      activeDays: markActive(s, today),
-      pomodorosByDate: {
-        ...s.pomodorosByDate,
-        [today]: (s.pomodorosByDate[today] ?? 0) + 1,
-      },
-    }));
+  /**
+   * Avança o timer se o ciclo atual terminou. Foco concluído conta um
+   * pomodoro e inicia a pausa; pausa concluída deixa o próximo foco pronto.
+   * Retorna o modo que acabou de terminar (ou null).
+   */
+  tickTimer(now = Date.now()): TimerState["mode"] | null {
+    const { timer } = getSnapshot();
+    if (timer.endsAt === null || timer.endsAt > now) return null;
+
+    if (timer.mode === "foco") {
+      const today = dayKey(timer.endsAt);
+      update((s) => ({
+        ...s,
+        timer: { mode: "pausa", endsAt: now + BREAK_MS, remainingMs: BREAK_MS },
+        activeDays: markActive(s, today),
+        pomodorosByDate: {
+          ...s.pomodorosByDate,
+          [today]: (s.pomodorosByDate[today] ?? 0) + 1,
+        },
+      }));
+    } else {
+      update((s) => ({
+        ...s,
+        timer: { mode: "foco", endsAt: null, remainingMs: FOCUS_MS },
+      }));
+    }
+    return timer.mode;
   },
 };
 
