@@ -1,5 +1,7 @@
 # SO Pessoal
 
+## 🔗 [link para testar](https://so-pessoal.vercel.app)
+
 > Um "sistema operacional pessoal" de produtividade: descarregue a mente, deixe a IA priorizar na Matriz de Eisenhower, foque com Pomodoro, planeje a semana e acompanhe seu progresso — tudo em uma única tela.
 
 Projeto de portfólio da disciplina **Produtividade e Gestão do Tempo** — UniFECAF.
